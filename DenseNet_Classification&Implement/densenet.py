@@ -107,9 +107,9 @@ class DenseNet(nn.Moudle):
 def densenet121(pretrained=False, **kwargs):
     model = DenseNet(num_init_features=64, growth_rate=32, block_config=(6, 12, 24, 16), **kwargs)
     if pretrained:
-        pattern = re.compile(r'^(denselayer\d+\.(?:norm|relu|conv))\.((?:[12])\.(?:weight|bias|running_mean|running_var))$')  ###
-        state_dict = model_zoo.load_url(model_urls['densenet121'])  ###
-        for key in list(state_dict.keys()):  ###
+        pattern = re.compile(r'^(denselayer\d+\.(?:norm|relu|conv))\.((?:[12])\.(?:weight|bias|running_mean|running_var))$') 
+        state_dict = model_zoo.load_url(model_urls['densenet121'])  
+        for key in list(state_dict.keys()):  
             res = pattern.match(key)
             if res:
                 new_key = res.group(1) + res.group(2)
@@ -118,11 +118,49 @@ def densenet121(pretrained=False, **kwargs):
         model.load_state_dict(state_dict)
     return model
     
+def densenet169(pretrained=False, **kwargs):
+    model = DenseNet(num_init_features=64, growth_rate=32, block_config=(6, 12, 32, 32), **kwargs)
+
+    if pretrained:
+        pattern = re.compile(r'^(.*denselayer\d+\.(?:norm|relu|conv))\.((?:[12])\.(?:weight|bias|running_mean|running_var))$')
+        state_dirt = model_zoo.load_url(model_urls['densenet169'])
+        for key in list(state_dict.keys()):
+            res = pattern.match(key)
+            if res:
+                new_key = res.group(1) + res.group(2)
+                state_dict[new_key] = state_dict[key]
+                del state_dict[key]
+        model.load_state_dict(state_dict)
+    return model
+
+def densenet201(pretrained=False, **kwargs):
+     model = DenseNet(num_init_features=64, growth_rate=32, block_config=(6, 12, 48, 32), **kwargs)
+    if pretrained:
+        pattern = re.compile(
+            r'^(.*denselayer\d+\.(?:norm|relu|conv))\.((?:[12])\.(?:weight|bias|running_mean|running_var))$')
+        state_dict = model_zoo.load_url(model_urls['densenet201'])
+        for key in list(state_dict.keys()):
+            res = pattern.match(key)
+            if res:
+                new_key = res.group(1) + res.group(2)
+                state_dict[new_key] = state_dict[key]
+                del state_dict[key]
+        model.load_state_dict(state_dict)
+    return model
 
 
-            
-
-
-
-
-
+def densenet161(pretrained=False, **kwargs):
+    model = DenseNet(num_init_features=96, growth_rate=48, block_config=(6, 12, 36, 24),
+                     **kwargs)
+    if pretrained:
+        pattern = re.compile(
+            r'^(.*denselayer\d+\.(?:norm|relu|conv))\.((?:[12])\.(?:weight|bias|running_mean|running_var))$')
+        state_dict = model_zoo.load_url(model_urls['densenet161'])
+        for key in list(state_dict.keys()):
+            res = pattern.match(key)
+            if res:
+                new_key = res.group(1) + res.group(2)
+                state_dict[new_key] = state_dict[key]
+                del state_dict[key]
+        model.load_state_dict(state_dict)
+    return model
